@@ -31,7 +31,7 @@ resource "azurerm_storage_account" "storage_account" {
   ###### DO NOT CHANGE DEFAULT VALUES / SET FOR OPTIMAL CONFIGURATION WITH PRIVATE ENDPOINT AND HARDENED SECURITY ######
   
   cross_tenant_replication_enabled = var.ctre #Optional; Should cross Tenant replication be enabled. Defaults to false.
-  enable_https_traffic_only = var.https_traffic #Optional; Forces HTTPS if enabled; true/false; default true
+  https_traffic_only_enabled = var.https_traffic #Optional; Forces HTTPS if enabled; true/false; default true
   min_tls_version = var.tls #Optional; The minimum supported TLS version for the storage account. Possible values are TLS1_0, TLS1_1, and TLS1_2. Defaults to TLS1_2 for new storage accounts.
   allow_nested_items_to_be_public = var.allow_nested_items_to_be_public #Optional; Allow or disallow nested items within this Account to opt into being public. Defaults to false
   shared_access_key_enabled = var.shared_access_key_enabled #Optional; Indicates whether the storage account permits requests to be authorized with the account access key via Shared Key. If false, then all requests, including shared access signatures, must be authorized with Azure Active Directory (Azure AD). Defaults to false
