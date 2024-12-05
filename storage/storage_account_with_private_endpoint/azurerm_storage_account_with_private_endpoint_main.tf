@@ -61,7 +61,7 @@ resource "azurerm_private_endpoint" "private_endpoint" {
   subnet_id           = var.pe_subnet_id
   tags = var.tags_pe #Optional; Set tags on the storage account / example: environment = "p"
   private_service_connection {
-    name                           = "${var.subscription_prefix}-${var.sac_name}-${each.value}-pep"
+    name                           = "${var.subscription_prefix}-${var.sac_name}-${each.value}-pep-psc"
     private_connection_resource_id = azurerm_storage_account.storage_account.id
     subresource_names              = [each.value] #Subresource names which the Private Endpoint is able to connect to, blob, file; https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-overview#private-link-resource
     is_manual_connection           = false #A message passed to the owner of the remote resource when the private endpoint attempts to establish the connection to the remote resource. Set to false
