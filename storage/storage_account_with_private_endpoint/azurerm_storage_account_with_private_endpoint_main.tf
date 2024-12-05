@@ -7,6 +7,15 @@ data "azurerm_client_config" "current" {
 }
 data "azurerm_subscription" "current" {
 }
+
+output "subscription_display_name" {
+  value = data.azurerm_subscription.current.display_name
+}
+
+output "private_endpoint_name" {
+  value = "${split("-", data.azurerm_subscription.current.display_name)[0]}-${var.sac_name}-${var.subresource_names[0]}-pep"
+}
+
 ###Create storage account########################
 #################################################
 
