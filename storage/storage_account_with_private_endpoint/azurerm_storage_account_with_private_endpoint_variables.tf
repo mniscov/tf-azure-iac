@@ -3,7 +3,11 @@ variable "https_traffic" {
   description = "Storage account https traffic"
   default = true
 }
-
+variable "subscription_prefix" {
+  description = "Prefix for subscription or environment"
+  type        = string
+  default     = "de"
+}
 variable "ctre" {
   type        = bool
   description = "Should cross Tenant replication be enabled. Defaults to true."
