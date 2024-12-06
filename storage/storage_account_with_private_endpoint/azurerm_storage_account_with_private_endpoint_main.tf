@@ -71,7 +71,6 @@ resource "azurerm_private_endpoint" "private_endpoint" {
   #Do not create private DNS zone group, record added by policy initative or manually into shared private DNS zone
   lifecycle {
     ignore_changes = [
-      network_rules,
       private_dns_zone_group,
       blob_properties
     ]
