@@ -48,6 +48,13 @@ resource "azurerm_storage_account" "storage_account" {
   default_to_oauth_authentication = var.default_to_oauth_authentication #Optional; Default to Azure Active Directory authorization in the Azure portal when accessing the Storage Account. The default value is false
   public_network_access_enabled = var.public_network_access_enabled #Optional; Whether the public network access is enabled? Defaults to false
   
+  lifecycle {
+    ignore_changes = [
+      network_rules,
+      blob_properties
+    ]
+  }
+
 }
 
 ###Create private endpoint for storage account###
@@ -71,8 +78,7 @@ resource "azurerm_private_endpoint" "private_endpoint" {
   #Do not create private DNS zone group, record added by policy initative or manually into shared private DNS zone
   lifecycle {
     ignore_changes = [
-      private_dns_zone_group,
-      blob_properties
+      private_dns_zone_group
     ]
   }
  
