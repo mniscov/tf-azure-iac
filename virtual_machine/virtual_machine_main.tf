@@ -25,7 +25,7 @@ provider "azurerm" {
 # refer to a resource group
 ########################################
 
-data "azurerm_resource_group" "rg" {
+resource "azurerm_resource_group" "rg" {
   name     = "${var.rg_name}-rg"
   location = var.location
 }
