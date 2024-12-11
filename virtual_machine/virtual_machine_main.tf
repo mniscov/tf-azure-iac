@@ -115,11 +115,10 @@ resource "azurerm_windows_virtual_machine" "vm" {
     caching              = "ReadWrite"
     storage_account_type = var.storageat
   }
-}
-
-source_image_reference {
-  publisher = var.publisher
-  offer     = var.offer
-  sku       = var.sku
-  version   = "latest"
+  source_image_reference {
+    publisher = var.publisher
+    offer     = var.offer
+    sku       = var.sku
+    version   = "latest"
+  }
 }
