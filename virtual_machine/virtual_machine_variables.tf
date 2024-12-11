@@ -25,7 +25,7 @@ variable "tenant_id" {
   description = "Tenant ID phoenixonline"
 }
 
-variable "rg-name" {
+variable "rg_name" {
   type        = string
   description = "name of your resource group"
 
