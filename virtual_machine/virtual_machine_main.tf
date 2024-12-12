@@ -27,7 +27,6 @@ provider "azurerm" {
 
 data "azurerm_resource_group" "rg" {
   name     = "${var.rg_name}-rg"
-  location = var.location
 }
 
 #######################################
@@ -45,7 +44,7 @@ data "azurerm_key_vault" "secretkv" {
 
 data "azurerm_key_vault_secret" "secret1" {
   name         = var.user
-  key_vault_id = data.azurerm_key_vault.existing.id
+  key_vault_id = data.azurerm_key_vault.secretkv.id
 }
 
 resource "azurerm_resource_group" "main" {
