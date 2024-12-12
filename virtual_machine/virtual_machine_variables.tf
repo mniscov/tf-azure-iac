@@ -95,6 +95,6 @@ variable "dns_servers" {
 
 variable "user" {
   type        = string
-  default     = "adminusr"
+  default     = "admin"
   description = "Local administrator account"
 }
