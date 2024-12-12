@@ -26,7 +26,7 @@ provider "azurerm" {
 ########################################
 
 data "azurerm_resource_group" "rg" {
-  name     = "${var.rg_name}-rg"
+  name     = "${var.rg_name}"
 }
 
 #######################################
@@ -57,9 +57,9 @@ resource "azurerm_resource_group" "main" {
 #########################################
 
 data "azurerm_subnet" "vnet" {
-  name                 = var.subnetname
-  virtual_network_name = var.vnetname
-  resource_group_name  = var.existingrg
+  name                 = var.subnet
+  virtual_network_name = var.vnet
+  resource_group_name  = var.rg_name
 }
 
 #########################################
