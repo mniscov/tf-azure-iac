@@ -78,6 +78,11 @@ variable "sku" {
   description = "OS sku"
 }
 
+variable "storageat" {
+  type        = string
+  description = "Tipul de cont de stocare pentru discul OS al mașinii virtuale"
+}
+
 variable "vm_count" {
   type        = number
   description = "Number of virtual machines to deploy"
