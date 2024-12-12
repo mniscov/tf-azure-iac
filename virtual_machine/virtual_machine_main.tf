@@ -67,7 +67,7 @@ data "azurerm_subnet" "vnet" {
 #########################################
 
 resource "azurerm_network_interface" "nic" {
-  count               = var.count
+  count               = var.vm_count
   name                = "${var.vm_name}-${count.index + 1}-nic"
   location            = data.azurerm_resource_group.rg.location
   resource_group_name = data.azurerm_resource_group.rg.name
