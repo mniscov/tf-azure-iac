@@ -91,8 +91,7 @@ resource "azurerm_network_interface_security_group_association" "nsg-nic-join" {
 
 resource "azurerm_windows_virtual_machine" "vm" {
   depends_on = [
-    azurerm_network_interface.nic,
-    var.rg_name,
+    azurerm_network_interface.nic
   ]
 
   count                 = var.vm_count
@@ -103,7 +102,7 @@ resource "azurerm_windows_virtual_machine" "vm" {
   provision_vm_agent    = true
   admin_username        = data.azurerm_key_vault.secret.secretkv.name
   admin_password        = data.azurerm_key_vault.secret.secretkv.value
-  network_interface_ids = ["${azurerm_network_interface.nic.*.id[count.index]}"]
+  network_interface_ids = [azurerm_network_interface.nic[count.index].id]
 
   identity {
     type = "SystemAssigned"
