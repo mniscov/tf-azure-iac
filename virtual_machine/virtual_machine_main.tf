@@ -47,11 +47,6 @@ data "azurerm_key_vault_secret" "secret1" {
   key_vault_id = data.azurerm_key_vault.secretkv.id
 }
 
-resource "azurerm_resource_group" "main" {
-  name     = data.azurerm_key_vault_secret.secret1.value
-  location = var.location
-}
-
 #########################################
 #refer to a subnet
 #########################################
