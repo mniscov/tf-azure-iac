@@ -90,8 +90,8 @@ resource "azurerm_windows_virtual_machine" "vm" {
   location              = data.azurerm_resource_group.rg.location
   size                  = var.vm_size
   provision_vm_agent    = true
-  admin_username        = data.azurerm_key_vault.secret.secretkv.name
-  admin_password        = data.azurerm_key_vault.secret.secretkv.value
+  admin_username        = data.azurerm_key_vault.secret.secret1.name
+  admin_password        = data.azurerm_key_vault.secret.secret1.value
   network_interface_ids = [azurerm_network_interface.nic[count.index].id]
 
   identity {
