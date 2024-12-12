@@ -70,8 +70,8 @@ data "azurerm_subnet" "vnet" {
 resource "azurerm_network_interface" "nic" {
   count               = var.count
   name                = "${var.vm_name}-${count.index + 1}-nic"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = data.azurerm_resource_group.rg.location
+  resource_group_name = data.azurerm_resource_group.rg.name
   dns_servers         = var.dns_servers
 
   ip_configuration {
@@ -98,8 +98,8 @@ resource "azurerm_windows_virtual_machine" "vm" {
 
   count                 = var.vm_count
   name                  = "${var.vm_name}-${count.index + 1}"
-  resource_group_name   = azurerm_resource_group.rg.name
-  location              = azurerm_resource_group.rg.location
+  resource_group_name   = data.azurerm_resource_group.rg.name
+  location              = data.azurerm_resource_group.rg.location
   size                  = var.vm_size
   provision_vm_agent    = true
   admin_username        = data.azurerm_key_vault.secret.secretkv.name
