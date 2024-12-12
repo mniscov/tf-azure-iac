@@ -44,6 +44,16 @@ resource "azurerm_key_vault" "key_vault" {
   }
 }
 
+########################################################################################################################
+# Add secrets to Key Vault
+########################################################################################################################
+
+resource "azurerm_key_vault_secret" "kv_secrets" {
+  for_each     = var.kv_secrets
+  name         = each.key
+  value        = each.value
+  key_vault_id = azurerm_key_vault.key_vault.id
+}
 
 ################################################################################
 # Create a new Private Endpoint - Optional
