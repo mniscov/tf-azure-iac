@@ -14,6 +14,10 @@
 #     type = string
 #     description = "Variable for our resource group"
 # }
+variable "keyvaultname" {
+  type        = string
+  description = "Name of the Key Vault to be used by the Virtual Machine module"
+}
 variable "subscription_id" {
   type        = string
   description = "Existing VM subscription ID"
