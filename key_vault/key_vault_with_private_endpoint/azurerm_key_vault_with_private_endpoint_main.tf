@@ -127,4 +127,5 @@ resource "azurerm_role_assignment" "role_assignments" {
   scope                = azurerm_key_vault.key_vault.id
   role_definition_name = each.value.role
   principal_id         = each.value.principal
+  depends_on = [azurerm_key_vault_secret.kv_secrets]
 }
