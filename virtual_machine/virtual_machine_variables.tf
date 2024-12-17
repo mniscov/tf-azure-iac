@@ -107,7 +107,11 @@ variable "dns_servers" {
   description = "On-premise DNS Server"
   default     = ["10.156.70.11", "10.156.70.13"]
 }
-
+variable "disable_password_authentication" {
+  type        = bool
+  description = "Flag to disable password authentication for Linux VMs"
+  default     = false
+}
 variable "user" {
   type        = string
   default     = "admin"
