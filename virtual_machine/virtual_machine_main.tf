@@ -71,7 +71,7 @@ resource "azurerm_network_interface" "nic" {
   ip_configuration {
     name                          = "${var.prefix}-${count.index + 1}-nic"
     subnet_id                     = data.azurerm_subnet.vnet.id
-    private_ip_address_allocation = "dynamic"
+    private_ip_address_allocation = "Dynamic"
   }
 }
 
