@@ -43,6 +43,15 @@ resource "azurerm_key_vault" "key_vault" {
     ip_rules       = var.kv_allowed_cidr
   }
 }
+########################################################################################################################
+# Wait for RBAC propagation
+########################################################################################################################
+
+resource "time_sleep" "wait_for_rbac" {
+  depends_on = [azurerm_role_assignment.role_assignments]
+
+  create_duration = "30s"  # Așteaptă 30 de secunde pentru propagare
+}
 
 ########################################################################################################################
 # Add secrets to Key Vault
@@ -53,7 +62,7 @@ resource "azurerm_key_vault_secret" "kv_secrets" {
   name         = each.key
   value        = each.value
   key_vault_id = azurerm_key_vault.key_vault.id
-  depends_on = [azurerm_role_assignment.role_assignments]
+  depends_on = [time_sleep.wait_for_rbac]
 }
 
 ################################################################################
