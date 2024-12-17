@@ -9,30 +9,17 @@ terraform {
     }
   }
 }
+
 #########################################
-# Configure the Microsoft Azure Provider
+# Refer to a resource group
 #########################################
-
-#provider "azurerm" {
-#  features {}
-#  subscription_id = var.subscription_id
-  #client_id = var.client_id
-  #client_secret = var.client_secret
- # tenant_id = var.tenant_id
-#}
-
-########################################
-# refer to a resource group
-########################################
-
 data "azurerm_resource_group" "rg" {
-  name     = "${var.rg_name}"
+  name = var.rg_name
 }
 
-#######################################
+########################################
 # Reference Azure Key Vault
-#######################################
-
+########################################
 data "azurerm_key_vault" "secretkv" {
   name                = var.keyvaultname
   resource_group_name = data.azurerm_resource_group.rg.name
@@ -41,16 +28,14 @@ data "azurerm_key_vault" "secretkv" {
 ######################################
 # Reference Key Vault Secret
 ######################################
-
 data "azurerm_key_vault_secret" "secret1" {
   name         = var.user
   key_vault_id = data.azurerm_key_vault.secretkv.id
 }
 
 #########################################
-#refer to a subnet
+# Refer to a subnet
 #########################################
-
 data "azurerm_subnet" "vnet" {
   name                 = var.subnet
   virtual_network_name = var.vnet
@@ -58,9 +43,8 @@ data "azurerm_subnet" "vnet" {
 }
 
 #########################################
-# create a network interface
+# Create a network interface
 #########################################
-
 resource "azurerm_network_interface" "nic" {
   count               = var.vm_count
   name                = "${var.vm_name}-${count.index + 1}-nic"
@@ -76,37 +60,59 @@ resource "azurerm_network_interface" "nic" {
 }
 
 ########################################################
-#Create Virtual Machine
+# Create Windows Virtual Machine
 ########################################################
-
 resource "azurerm_windows_virtual_machine" "vm" {
-  depends_on = [
-    azurerm_network_interface.nic
-  ]
-
-  count                 = var.vm_count
+  count                 = var.vm_os_type == "windows" ? var.vm_count : 0
   name                  = "${var.vm_name}-${count.index + 1}"
   resource_group_name   = data.azurerm_resource_group.rg.name
   location              = data.azurerm_resource_group.rg.location
   size                  = var.vm_size
-  provision_vm_agent    = true
-  admin_username        = data.azurerm_key_vault_secret.secret1.name
-  admin_password        = data.azurerm_key_vault_secret.secret1.value
+  admin_username        = var.admin_username
+  admin_password        = var.admin_password
   network_interface_ids = [azurerm_network_interface.nic[count.index].id]
 
-  identity {
-    type = "SystemAssigned"
-  }
-
   os_disk {
-    name                 = "${lower(var.vm_name)}-${count.index + 1}"
+    name                 = "${var.vm_name}-${count.index + 1}-osdisk"
     caching              = "ReadWrite"
     storage_account_type = var.storageat
   }
+
   source_image_reference {
     publisher = var.publisher
     offer     = var.offer
     sku       = var.sku
-    version   = "latest"
+    version   = var.image_version
+  }
+}
+
+########################################################
+# Create Linux Virtual Machine
+########################################################
+resource "azurerm_linux_virtual_machine" "vm" {
+  count                 = var.vm_os_type == "linux" ? var.vm_count : 0
+  name                  = "${var.vm_name}-${count.index + 1}"
+  resource_group_name   = data.azurerm_resource_group.rg.name
+  location              = data.azurerm_resource_group.rg.location
+  size                  = var.vm_size
+  admin_username        = var.admin_username
+  network_interface_ids = [azurerm_network_interface.nic[count.index].id]
+
+  admin_ssh_key {
+    username   = var.admin_username
+    public_key = var.ssh_public_key
+  }
+
+  os_disk {
+    name                 = "${var.vm_name}-${count.index + 1}-osdisk"
+    caching              = "ReadWrite"
+    storage_account_type = var.storageat
+  }
+
+  source_image_reference {
+    publisher = var.publisher
+    offer     = var.offer
+    sku       = var.sku
+    version   = var.image_version
   }
 }
