@@ -49,7 +49,7 @@ resource "azurerm_key_vault" "key_vault" {
 resource "time_sleep" "wait_for_private_endpoint" {
   depends_on = [azurerm_private_endpoint.pe]
 
-  create_duration = "60s"  # Așteaptă 60 de secunde pentru propagarea Private Endpoint
+  create_duration = "150s"
 }
 
 ########################################################################################################################
@@ -59,7 +59,7 @@ resource "time_sleep" "wait_for_private_endpoint" {
 resource "time_sleep" "wait_for_rbac" {
   depends_on = [azurerm_role_assignment.role_assignments]
 
-  create_duration = "30s"  # Așteaptă 30 de secunde pentru propagare
+  create_duration = "30s"
 }
 
 ########################################################################################################################
