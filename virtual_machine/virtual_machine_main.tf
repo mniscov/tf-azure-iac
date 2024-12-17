@@ -68,10 +68,13 @@ resource "azurerm_windows_virtual_machine" "vm" {
   resource_group_name   = data.azurerm_resource_group.rg.name
   location              = data.azurerm_resource_group.rg.location
   size                  = var.vm_size
-  admin_username        = var.admin_username
-  admin_password        = var.admin_password
+  admin_username        = data.azurerm_key_vault_secret.secret1.name
+  admin_password        = data.azurerm_key_vault_secret.secret1.value
   network_interface_ids = [azurerm_network_interface.nic[count.index].id]
 
+  identity {
+    type = "SystemAssigned"
+  }
   os_disk {
     name                 = "${var.vm_name}-${count.index + 1}-osdisk"
     caching              = "ReadWrite"
@@ -95,14 +98,13 @@ resource "azurerm_linux_virtual_machine" "vm" {
   resource_group_name   = data.azurerm_resource_group.rg.name
   location              = data.azurerm_resource_group.rg.location
   size                  = var.vm_size
-  admin_username        = var.admin_username
+  admin_username        = data.azurerm_key_vault_secret.secret1.name
+  admin_password        = data.azurerm_key_vault_secret.secret1.value
   network_interface_ids = [azurerm_network_interface.nic[count.index].id]
 
-  admin_ssh_key {
-    username   = var.admin_username
-    public_key = var.ssh_public_key
+ identity {
+    type = "SystemAssigned"
   }
-
   os_disk {
     name                 = "${var.vm_name}-${count.index + 1}-osdisk"
     caching              = "ReadWrite"
