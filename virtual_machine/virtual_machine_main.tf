@@ -101,7 +101,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   admin_username        = data.azurerm_key_vault_secret.secret1.name
   admin_password        = data.azurerm_key_vault_secret.secret1.value
   network_interface_ids = [azurerm_network_interface.nic[count.index].id]
-
+  disable_password_authentication = var.disable_password_authentication
  identity {
     type = "SystemAssigned"
   }
