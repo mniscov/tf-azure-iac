@@ -14,6 +14,16 @@
 #     type = string
 #     description = "Variable for our resource group"
 # }
+variable "vm_os_type" {
+  type        = string
+  description = "Type of the VM OS (linux or windows)"
+}
+
+variable "image_version" {
+  type        = string
+  description = "Version of the OS image"
+  default     = "latest"
+}
 variable "keyvaultname" {
   type        = string
   description = "Name of the Key Vault to be used by the Virtual Machine module"
@@ -80,7 +90,7 @@ variable "sku" {
 
 variable "storageat" {
   type        = string
-  description = "Tipul de cont de stocare pentru discul OS al mașinii virtuale"
+  description = "Storage Account type"
 }
 
 variable "vm_count" {
