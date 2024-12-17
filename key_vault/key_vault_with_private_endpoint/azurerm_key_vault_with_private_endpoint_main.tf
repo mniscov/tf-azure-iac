@@ -44,6 +44,15 @@ resource "azurerm_key_vault" "key_vault" {
   }
 }
 ########################################################################################################################
+# Wait for Private endpoint
+########################################################################################################################
+resource "time_sleep" "wait_for_private_endpoint" {
+  depends_on = [azurerm_private_endpoint.pe]
+
+  create_duration = "60s"  # Așteaptă 60 de secunde pentru propagarea Private Endpoint
+}
+
+########################################################################################################################
 # Wait for RBAC propagation
 ########################################################################################################################
 
@@ -66,7 +75,9 @@ resource "azurerm_key_vault_secret" "kv_secrets" {
     prevent_destroy = false
     ignore_changes  = [value]
   }
-  depends_on = [time_sleep.wait_for_rbac]
+  depends_on = [time_sleep.wait_for_rbac,
+    time_sleep.wait_for_private_endpoint
+   ]
 }
 
 ################################################################################
