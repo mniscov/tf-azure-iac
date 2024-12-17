@@ -21,6 +21,7 @@ variable "purgedelete" {
 variable "recover" {
   type        = bool
   description = "recover soft deleted key vaults"
+  default = true
 }
 
 variable "enabled_for_disk_encryption" {
