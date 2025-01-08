@@ -59,7 +59,7 @@ resource "time_sleep" "wait_for_private_endpoint" {
 resource "time_sleep" "wait_for_rbac" {
   depends_on = [azurerm_role_assignment.role_assignments]
 
-  create_duration = "30s"
+  create_duration = "60s"
 }
 
 ########################################################################################################################
@@ -75,6 +75,7 @@ resource "azurerm_key_vault_secret" "kv_secrets" {
     prevent_destroy = false
     ignore_changes  = [value]
   }
+  depends_on = [time_sleep.wait_for_rbac]
 }
 
 ################################################################################
@@ -127,5 +128,4 @@ resource "azurerm_role_assignment" "role_assignments" {
   scope                = azurerm_key_vault.key_vault.id
   role_definition_name = each.value.role
   principal_id         = each.value.principal
-  depends_on = [azurerm_key_vault_secret.kv_secrets]
 }
