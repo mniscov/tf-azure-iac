@@ -49,7 +49,7 @@ resource "azurerm_key_vault" "key_vault" {
 resource "time_sleep" "wait_for_private_endpoint" {
   depends_on = [azurerm_private_endpoint.pe]
 
-  create_duration = "150s"
+  create_duration = "500s"
 }
 
 ########################################################################################################################
