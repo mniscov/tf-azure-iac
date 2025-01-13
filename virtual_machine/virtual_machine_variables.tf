@@ -117,3 +117,8 @@ variable "user" {
   default     = "admin"
   description = "Local administrator account"
 }
+variable "tags" {
+  type        = map(string)
+  description = "Tags to apply to the resources"
+  default     = {}
+}
