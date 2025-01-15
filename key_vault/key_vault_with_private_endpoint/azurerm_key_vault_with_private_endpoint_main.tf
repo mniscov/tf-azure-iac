@@ -76,7 +76,7 @@ resource "azurerm_key_vault_secret" "kv_secrets" {
   }
   lifecycle {
     prevent_destroy = false
-    ignore_changes  = [value]
+    ignore_changes  = []
   }
   depends_on = [time_sleep.wait_for_rbac, time_sleep.wait_for_private_endpoint]
 }
