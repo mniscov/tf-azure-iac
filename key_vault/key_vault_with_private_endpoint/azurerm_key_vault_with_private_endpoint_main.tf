@@ -72,7 +72,7 @@ resource "azurerm_key_vault_secret" "kv_secrets" {
   value        = each.value
   key_vault_id = azurerm_key_vault.key_vault.id
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
     ignore_changes  = [value]
   }
   depends_on = [time_sleep.wait_for_rbac, time_sleep.wait_for_private_endpoint]
