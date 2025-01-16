@@ -1,114 +1,134 @@
-variable "kv_config" {
-  type = object({
-    name                       = string
-    location                   = string
-    resource_group_name        = string
-    sku_name                   = string
-    soft_delete_retention_days = string
-  })
-}
-
-variable "kv_secrets" {
-  type = map(string)
-  description = "A map of secrets to be added to the Key Vault"
-}
-variable "create_new_keyvault" {
-  type    = bool
-  default = false
-}
-variable "purgedelete" {
-  type        = bool
-  description = "purge soft delete on destroy"
-}
-
-variable "recover" {
-  type        = bool
-  description = "recover soft deleted key vaults"
-  default = true
-}
-
-variable "enabled_for_disk_encryption" {
-  type        = bool
-  description = "Boolean flag to specify whether Azure Disk Encryption is permitted to retrieve secrets from the vault and unwrap keys"
-}
-
-variable "public_network_access" {
-  type        = bool
-  description = "Whether public network access is allowed for this Key Vault."
-  default = false
-}
-
-variable "purge_protection_enabled" {
-  type        = bool
-  description = "Is Purge Protection enabled for this Key Vault"
-  default = true
-}
-
-variable "enable_rbac_authorization" {
-  type        = bool
-  description = "Boolean flag to specify whether Azure Key Vault uses Role Based Access Control (RBAC) for authorization of data actions"
-  default = true
-}
-
-variable "kv_default_action" {
-  description = "The Default Action to use when theres no match to the IP Rules. Possible values are Allow and Deny."
-  type        = string
-  default     = "Deny"
-}
-
-variable "kv_allowed_cidr" {
-  description = <<EOF
-  One or more IP addresses (in CIDR notation) that can access the KeyVault.
-  EXAMPLE:
-  kv_allowed_cidr = ["77.66.55.0/24","21.22.23.0/18"]
-EOF
-  type        = list(string)
-  default     = []
-}
-
-variable "role_assignments" {
-  type        = any
-  default     = {}
-  description = <<EOF
-    "Define a map of Roles (either Custom or Built-In) to Princpal IDs, scoped to the new Key Vault.
-    EXAMPLE:
-    role_assignments = {
-        Secrets_User    = ["sfdsf", "fdsdvfsa"],
-        Secrets_Officer = ["esrewfds", "wefsdsd"]
-        Contributor     = ["879y9-ugbi", "iuhi39hy98hd"]
+terraform {
+  required_version = ">= 0.13"
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.24.0"
     }
-EOF
+  }
+}
+provider "azurerm" {
+  features {
+    key_vault {
+      purge_soft_delete_on_destroy    = var.purgedelete
+      recover_soft_deleted_key_vaults = var.recover
+    }
+  }
 }
 
-
-# OPTIONAL
-variable "pe_name" {
-  type        = string
-  description = "The name to assign to the Key vault Private Endpoint. Private Endpoint will NOT be deployed if this is not defined."
-  default     = ""
+data "azurerm_client_config" "current" {
 }
 
-variable "pe_subnet_id" {
-  description = "The ID of the Azure Subnet where the new private Endpoint for the Key vault will be created."
-  type        = string
-  default     = ""
+########################################################################################################################
+# Creates a New KeyVault & Private Endpoint
+########################################################################################################################
+# Deploy the KeyVault
+resource "azurerm_key_vault" "key_vault" {
+  name                        = var.kv_config.name
+  location                    = var.kv_config.location
+  resource_group_name         = var.kv_config.resource_group_name
+  sku_name                    = var.kv_config.sku_name
+  enabled_for_disk_encryption = var.enabled_for_disk_encryption ###
+  tenant_id                   = data.azurerm_client_config.current.tenant_id
+  public_network_access_enabled = var.public_network_access ###
+  soft_delete_retention_days = var.kv_config.soft_delete_retention_days
+  purge_protection_enabled   = var.purge_protection_enabled ###
+  enable_rbac_authorization  = var.enable_rbac_authorization ###
+  tags                       = var.tags
+
+
+  network_acls {
+    default_action = var.kv_default_action
+    bypass         = "AzureServices"
+    ip_rules       = var.kv_allowed_cidr
+  }
+}
+########################################################################################################################
+# Wait for Private endpoint
+########################################################################################################################
+resource "time_sleep" "wait_for_private_endpoint" {
+  depends_on = [azurerm_private_endpoint.pe]
+
+  create_duration = "660s"
 }
 
-variable "private_vault_dns_zone_name" {
-  description = "The name of the Private DNS zone for Private Endpoint"
-  type        = string
-  default     = ""
+########################################################################################################################
+# Wait for RBAC propagation
+########################################################################################################################
+
+resource "time_sleep" "wait_for_rbac" {
+  depends_on = [azurerm_role_assignment.role_assignments]
+
+  create_duration = "60s"
 }
 
-variable "private_vault_dns_zone_ids" {
-  description = "The ID of the Private DNS zone for Private Endpoint"
-  type        = list(string)
-  default     = []
+########################################################################################################################
+# Add secrets to Key Vault
+########################################################################################################################
+
+resource "azurerm_key_vault_secret" "kv_secrets" {
+  for_each     = var.kv_secrets
+  name         = each.key
+  value        = each.value
+  key_vault_id = azurerm_key_vault.key_vault.id
+  attributes {
+    expires = timeadd(timestamp(), "720h")
+  }
+  lifecycle {
+    prevent_destroy = false
+    ignore_changes  = []
+  }
+  depends_on = [time_sleep.wait_for_rbac, time_sleep.wait_for_private_endpoint]
 }
 
+################################################################################
+# Create a new Private Endpoint - Optional
+################################################################################
+resource "azurerm_private_endpoint" "pe" {
+  count               = var.pe_name == "" ? 0 : 1
+  name                = var.pe_name
+  location            = var.kv_config.location
+  resource_group_name = var.kv_config.resource_group_name
+  subnet_id           = var.pe_subnet_id
 
-variable "tags" {
-  description = "A map of tags to be assigned to the new resource"
-  type        = map(string)
-  default     = {}
+  private_service_connection {
+    name                           = "${var.kv_config.name}-pep"
+    is_manual_connection           = false
+    private_connection_resource_id = azurerm_key_vault.key_vault.id
+    subresource_names              = ["vault"]
+  }
+
+  lifecycle {
+    ignore_changes = [
+      private_dns_zone_group
+    ]
+  }
+}
+
+################################
+# Create Role Assignments
+################################
+locals {
+  principal_roles_list = flatten([ # Produce a list object, containing mapping of role names to principal IDs.
+    for role, principals in var.role_assignments : [
+      for principal in principals : {
+        role      = role
+        principal = principal
+      }
+    ]
+  ])
+
+  principal_roles_tuple = {
+    for obj in local.principal_roles_list : "${obj.role}_${obj.principal}" => obj
+  }
+
+  principal_roles_map = tomap(local.principal_roles_tuple)
+
+}
+
+resource "azurerm_role_assignment" "role_assignments" {
+  for_each             = local.principal_roles_map
+  scope                = azurerm_key_vault.key_vault.id
+  role_definition_name = each.value.role
+  principal_id         = each.value.principal
 }
