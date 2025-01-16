@@ -18,12 +18,25 @@ provider "azurerm" {
 
 data "azurerm_client_config" "current" {
 }
+locals {
+  key_vault_id = var.create_new_keyvault ? azurerm_key_vault.key_vault[0].id : data.azurerm_key_vault.existing_kv[0].id
+}
+
+#########################################
+# Refference an existing KV
+#########################################
+data "azurerm_key_vault" "existing_kv" {
+  count                = var.create_new_keyvault ? 0 : 1
+  name                 = var.kv_config.name
+  resource_group_name  = var.kv_config.resource_group_name
+}
 
 ########################################################################################################################
 # Creates a New KeyVault & Private Endpoint
 ########################################################################################################################
 # Deploy the KeyVault
 resource "azurerm_key_vault" "key_vault" {
+  count                        = var.create_new_keyvault ? 1 : 0
   name                        = var.kv_config.name
   location                    = var.kv_config.location
   resource_group_name         = var.kv_config.resource_group_name
@@ -70,7 +83,7 @@ resource "azurerm_key_vault_secret" "kv_secrets" {
   for_each     = var.kv_secrets
   name         = each.key
   value        = each.value
-  key_vault_id = azurerm_key_vault.key_vault.id
+  key_vault_id = local.key_vault_id
   attributes {
     expires = timeadd(timestamp(), "720h")
   }
@@ -85,7 +98,7 @@ resource "azurerm_key_vault_secret" "kv_secrets" {
 # Create a new Private Endpoint - Optional
 ################################################################################
 resource "azurerm_private_endpoint" "pe" {
-  count               = var.pe_name == "" ? 0 : 1
+  count = var.create_new_keyvault && var.pe_name != "" ? 1 : 0
   name                = var.pe_name
   location            = var.kv_config.location
   resource_group_name = var.kv_config.resource_group_name
@@ -127,7 +140,7 @@ locals {
 }
 
 resource "azurerm_role_assignment" "role_assignments" {
-  for_each             = local.principal_roles_map
+  for_each             = var.create_new_keyvault ? local.principal_roles_map : {}
   scope                = azurerm_key_vault.key_vault.id
   role_definition_name = each.value.role
   principal_id         = each.value.principal
