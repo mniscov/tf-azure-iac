@@ -12,7 +12,10 @@ variable "kv_secrets" {
   type = map(string)
   description = "A map of secrets to be added to the Key Vault"
 }
-
+variable "create_new_keyvault" {
+  type    = bool
+  default = false
+}
 variable "purgedelete" {
   type        = bool
   description = "purge soft delete on destroy"
