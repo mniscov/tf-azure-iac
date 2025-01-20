@@ -22,10 +22,6 @@ resource "azurerm_key_vault_secret" "kv_secrets" {
   value        = each.value
   key_vault_id = data.azurerm_key_vault.existing_kv.id
 
-  attributes {
-    expires = timeadd(timestamp(), "720h")
-  }
-
   lifecycle {
     prevent_destroy = false
     ignore_changes  = []
