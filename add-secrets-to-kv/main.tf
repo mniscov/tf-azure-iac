@@ -24,6 +24,7 @@ resource "azurerm_key_vault_secret" "kv_secrets" {
 
   lifecycle {
     prevent_destroy = false
-    ignore_changes  = []
+    ignore_changes  = [value]
+    create_before_destroy = true
   }
 }
