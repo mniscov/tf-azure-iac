@@ -18,13 +18,13 @@ data "azurerm_key_vault" "existing_kv" {
 
 resource "azurerm_key_vault_secret" "kv_secrets" {
   for_each     = var.kv_secrets
-  name         = each.key
+  name         = "${each.key}-${formatdate("YYYYMMDD-HHMMSS", timestamp())}"
   value        = each.value
   key_vault_id = data.azurerm_key_vault.existing_kv.id
 
+  expiration_date = timeadd(timestamp(), "168h")
+
   lifecycle {
     prevent_destroy = false
-    ignore_changes  = [value]
-    create_before_destroy = true
   }
 }
