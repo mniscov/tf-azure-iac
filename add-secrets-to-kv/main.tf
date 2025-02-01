@@ -22,7 +22,7 @@ resource "azurerm_key_vault_secret" "kv_secrets" {
   value        = each.value
   key_vault_id = data.azurerm_key_vault.existing_kv.id
 
-  expiration_date = formatdate("YYYY-MM-DD'T'HH:mm:ss'Z'", timeadd(timestamp(), "168h"))
+  expiration_date = formatdate("YYYY-MM-DD'T'HH:mm:ss'Z'", timeadd(timestamp(), "72h"))
 
   lifecycle {
     prevent_destroy = false
