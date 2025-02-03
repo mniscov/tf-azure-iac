@@ -47,6 +47,10 @@ variable "retention_daily_count" {
   type        = number
   default     = 7
 }
+variable "tags" {
+  description = "Tags to apply to all backup resources"
+  type        = map(string)
+}
 variable "vm_list" {
   description = "A map of VMs with their IDs to be backed up"
   type = map(object({
