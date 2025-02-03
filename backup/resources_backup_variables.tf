@@ -2,10 +2,6 @@ variable "resource_group_name" {
   description = "The name of the existing resource group"
   type        = string
 }
-variable "resource_group_location" {
-  description = "The location of the resource group"
-  type        = string
-}
 
 variable "resource_prefix" {
   description = "A prefix to be used for naming resources (e.g., 'myapp')"
