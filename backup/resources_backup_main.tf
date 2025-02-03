@@ -26,16 +26,16 @@ resource "azurerm_backup_policy_vm" "daily-policy" {
     count = var.retention_daily_count
   }
 }
+data "azurerm_virtual_machine" "vms" {
+  for_each            = toset(var.vm_names)
+  name                = each.value
+  resource_group_name = var.resource_group_name
+}
 resource "azurerm_backup_protected_vm" "vm_backup" {
-  for_each = { 
-    for vm in azurerm_linux_virtual_machine.vm : vm.name => vm 
-    if lookup(vm.tags, "backup", "no") == "yes" && lookup(vm.tags, "managedBy", "none") == "terraform"
-  }
+  for_each = data.azurerm_virtual_machine.vms
 
   resource_group_name = data.azurerm_resource_group.rg.name
   recovery_vault_name = azurerm_recovery_services_vault.bk-vault.name
   source_vm_id        = each.value.id
   backup_policy_id    = azurerm_backup_policy_vm.daily-policy.id
 }
-
-
