@@ -67,7 +67,15 @@ variable "vm_count" {
   type        = number
   description = "Number of virtual machines to deploy"
 }
-
+variable "image_version" {
+  type        = string
+  description = "Version of the OS image"
+  default     = "latest"
+}
+variable "keyvault_name" {
+  type        = string
+  description = "Name of the Key Vault to be used by the Virtual Machine module"
+}
 variable "vm_size" {
   type        = string
   description = "Size of the machine to deploy"
