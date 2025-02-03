@@ -9,7 +9,9 @@ resource "azurerm_recovery_services_vault" "bk-vault" {
   sku                 = var.vault_sku
   public_network_access_enabled = var.public_network_access_enabled
   storage_mode_type   = var.storage_mode_type
-
+  lifecycle {
+    prevent_destroy = true
+  }
   tags = var.tags
 }
 
