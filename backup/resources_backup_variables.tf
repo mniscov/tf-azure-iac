@@ -47,10 +47,7 @@ variable "tags" {
   description = "Tags to apply to all backup resources"
   type        = map(string)
 }
-variable "vm_list" {
-  description = "A map of VMs with their IDs to be backed up"
-  type = map(object({
-    id = string
-  }))
-  default = {}
+variable "vm_names" {
+  description = "List of VM names that should be backed up"
+  type        = list(string)
 }
