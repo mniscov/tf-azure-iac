@@ -2,6 +2,10 @@ variable "resource_group_name" {
   description = "The name of the existing resource group"
   type        = string
 }
+variable "resource_group_location" {
+  description = "The location of the resource group"
+  type        = string
+}
 
 variable "resource_prefix" {
   description = "A prefix to be used for naming resources (e.g., 'myapp')"
@@ -42,4 +46,11 @@ variable "retention_daily_count" {
   description = "Number of daily backups to retain"
   type        = number
   default     = 7
+}
+variable "vm_list" {
+  description = "A map of VMs with their IDs to be backed up"
+  type = map(object({
+    id = string
+  }))
+  default = {}
 }
