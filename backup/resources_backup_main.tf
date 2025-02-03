@@ -28,7 +28,7 @@ resource "azurerm_backup_policy_vm" "daily-policy" {
 }
 resource "azurerm_backup_protected_vm" "vm_backup" {
   for_each = { 
-    for vm in azurerm_virtual_machine.this : vm.name => vm 
+    for vm in azurerm_linux_virtual_machine.vm : vm.name => vm 
     if lookup(vm.tags, "backup", "no") == "yes" && lookup(vm.tags, "managedBy", "none") == "terraform"
   }
 
