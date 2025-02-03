@@ -21,7 +21,7 @@ data "azurerm_resource_group" "rg" {
 # Reference Azure Key Vault
 ########################################
 data "azurerm_key_vault" "secretkv" {
-  name                = var.keyvaultname
+  name                = var.keyvault_name
   resource_group_name = data.azurerm_resource_group.rg.name
 }
 
