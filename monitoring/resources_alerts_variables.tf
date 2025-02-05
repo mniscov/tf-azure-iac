@@ -1,3 +1,9 @@
+variable "subscription_id" {
+  description = "Defines subscriptio id"
+  type = string
+  default = "5c6930fc-b1f9-4234-8e93-ca7bd89b77ca"
+}
+
 variable "vm_ids" {
   description = "List of Virtual Machine IDs to apply alerts to"
   type        = list(string)
