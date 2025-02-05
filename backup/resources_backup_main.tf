@@ -9,7 +9,6 @@ resource "azurerm_recovery_services_vault" "bk-vault" {
   sku                 = var.vault_sku
   public_network_access_enabled = var.public_network_access_enabled
   storage_mode_type   = var.storage_mode_type
-  lifecycle { prevent_destroy = true }
   tags = var.tags
 }
 
@@ -38,7 +37,4 @@ resource "azurerm_backup_protected_vm" "vm_backup" {
   recovery_vault_name = azurerm_recovery_services_vault.bk-vault.name
   source_vm_id        = each.value.id
   backup_policy_id    = azurerm_backup_policy_vm.daily-policy.id
-  lifecycle {
-    ignore_changes = [backup_policy_id]
-  }
 }
