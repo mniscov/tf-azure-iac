@@ -143,10 +143,11 @@ variable "log_criteria" {
 variable "custom_criteria" {
   description = "Additional custom criteria for the activity log alert"
   type = map(object({
+    name           = string
+    description    = string
     category       = string
     operation_name = string
     resource_type  = string
-    description    = string
   }))
 }
 
