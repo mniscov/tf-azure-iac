@@ -23,7 +23,7 @@ resource "azurerm_monitor_activity_log_alert" "log_alert" {
   name                = upper("SEC-ALRT-${data.azurerm_subscription.current.display_name}-001-${each.value.name}")
   resource_group_name = data.azurerm_resource_group.rg.name
   location            = data.azurerm_resource_group.rg.location
-  scopes              = module.virtual_machine.vm_ids
+  scopes              = var.vm_ids
   description         = each.value.description
 
   criteria {
