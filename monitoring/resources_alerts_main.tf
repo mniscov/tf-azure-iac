@@ -23,6 +23,8 @@ resource "azurerm_monitor_action_group" "action_group" {
 resource "azurerm_monitor_activity_log_alert" "log_alert" {
   for_each            = var.enable_log_alert == true ? merge(var.log_criteria, var.custom_criteria) : {}
   name                = upper("SEC-ALRT-${data.azurerm_subscription.current.display_name}-001-${each.value.name}")
+  resource_group_name = data.azurerm_resource_group.rg.name
+  location            = data.azurerm_resource_group.rg.location
   scopes              = [data.azurerm_subscription.current.id]
   description         = each.value.description
 
