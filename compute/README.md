@@ -190,7 +190,7 @@ module "virtual_machine" {
 
 
 
-## Network Configuration
+### Network Configuration
 Each VM is deployed in a specific subnet of a Virtual Network. Ensure that the subnet and VNet exist before using the module:
 
 ### Referencing a Subnet
@@ -218,7 +218,7 @@ resource "azurerm_network_interface" "nic" {
   }
 }
 ```
-## Key Differences Between `azurerm_linux_virtual_machine` and `azurerm_windows_virtual_machine`
+### Key Differences Between `azurerm_linux_virtual_machine` and `azurerm_windows_virtual_machine`
 
 #### 1. Authentication Differences
 
