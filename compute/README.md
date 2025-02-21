@@ -151,7 +151,7 @@ admin_password = data.azurerm_key_vault_secret.secret1.value
 ### Don't want to use the module "add_secrets_to_kv"?
  1. Create another branch
  2. Edit the virtual_machine_main.tf
-    - Remove the data.azurerm_key_vault_secret.secret1.name and data.azurerm_key_vault_secret.secret1.value refference
+    - Remove the **data.azurerm_key_vault_secret.secret1.name** and **data.azurerm_key_vault_secret.secret1.value** refferences
 ```hcl
 resource "azurerm_linux_virtual_machine" "vm" {
 ...
