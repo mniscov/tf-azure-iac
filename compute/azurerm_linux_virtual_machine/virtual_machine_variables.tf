@@ -5,7 +5,6 @@ variable "subscription_id" {
 
 variable "tenant_id" {
   type        = string
-  default     = "1878a48b-63d6-4d12-a900-07d4267f6762"
   description = "Tenant ID phoenixonline"
 }
 
