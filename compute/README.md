@@ -12,8 +12,8 @@ module "virtual_machine" {
   source = "git::https://github.com/mniscov/tf-azure-iac.git//compute//azurerm_linux_virtual_machine?ref=main"
 
   vm_count        = "2" #Number of virtual machines to deploy
-  rg_name         = "<your-resource-group>-rg"
-  keyvault_name   = "<your-key-vault>-kv"
+  rg_name         = "<your-resource-group>" The resource group should already exist
+  keyvault_name   = "<your-key-vault>" #The key vault should already exist
   user			  = "<your-username-for-vms>" #Optional. If you do not set this will use the default admin
   disable_password_authentication = false #Should stay on false 
   vnet            = "de-devopsprod-p-ne-nova-vnet"
@@ -34,8 +34,24 @@ module "virtual_machine" {
     managedBy = "terraform"
     tag = "value"	
   }
-  depends_on = [module.add_secrets_to_kv] #If you want to add a secret to an existing keyvault then to be used by vms you should use this module
+  depends_on = [module.add_secrets_to_kv] #IMPORTANT! If you want to add a secret to an existing keyvault to be used by vms you should use add_secrets_to_kv module as well
 }
+```
+
+```hcl
+module "add_secrets_to_kv" {
+  source            = "git::https://github.com/mniscov/tf-azure-iac.git//add-secrets-to-kv?ref=main"
+  keyvault_name     = "<existing-key-vault>" 
+  keyvault_rg_name  = "<existing-key-vault-rg>"
+  
+  kv_secrets = {
+    for i in range(var.vm_count) : "${var.vm_name}-${i + 1}" => "<YOUR_PASS_HERE>-${i + 1}"
+  }
+}
+  # Generates a map of secrets for each VM, where the key is the VM name 
+  # and the value is a dynamically generated password.
+  # These secrets are stored in Azure Key Vault.
+  # The key is the VM name (e.g., "linux-vm-1"), and the value is a password format (e.g., "mypassword-1").
 ```
 
 ### Windows Virtual Machine
