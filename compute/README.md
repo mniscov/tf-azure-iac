@@ -228,9 +228,6 @@ resource "azurerm_network_interface" "nic" {
 | **`admin_password` (Optional)** |  Only if `disable_password_authentication = false`         |  Required |
 | **`admin_ssh_key` (Optional)**  |  Required if `admin_password` is not set (SSH authentication) |  Not available (Windows does not support SSH authentication) |
 
-- **Linux:** Can authenticate using **SSH keys or passwords** (if `disable_password_authentication = false`).  
-- **Windows:** **Requires a password (`admin_password`)**, SSH authentication is **not available**.  
-
 ---
 
 #### 2. OS Customization & User Data
