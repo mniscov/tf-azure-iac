@@ -220,7 +220,7 @@ resource "azurerm_network_interface" "nic" {
 ```
 ## Key Differences Between `azurerm_linux_virtual_machine` and `azurerm_windows_virtual_machine`
 
-### 1. Authentication Differences
+#### 1. Authentication Differences
 
 | Feature                         | Linux (`azurerm_linux_virtual_machine`)                           | Windows (`azurerm_windows_virtual_machine`) |
 |---------------------------------|----------------------------------------------------------------|--------------------------------------------|
@@ -233,7 +233,7 @@ resource "azurerm_network_interface" "nic" {
 
 ---
 
-### 2. OS Customization & User Data
+#### 2. OS Customization & User Data
 
 | Feature                         | Linux (`azurerm_linux_virtual_machine`) | Windows (`azurerm_windows_virtual_machine`) |
 |---------------------------------|----------------------------------------|--------------------------------------------|
@@ -243,7 +243,7 @@ resource "azurerm_network_interface" "nic" {
 
 ---
 
-### 3. OS Patching & Updates
+#### 3. OS Patching & Updates
 
 | Feature                         | Linux (`azurerm_linux_virtual_machine`) | Windows (`azurerm_windows_virtual_machine`) |
 |---------------------------------|----------------------------------------|--------------------------------------------|
@@ -253,7 +253,7 @@ resource "azurerm_network_interface" "nic" {
 
 ---
 
-### 4. Security Features
+#### 4. Security Features
 
 | Feature                         | Linux (`azurerm_linux_virtual_machine`) | Windows (`azurerm_windows_virtual_machine`) |
 |---------------------------------|----------------------------------------|--------------------------------------------|
@@ -263,7 +263,7 @@ resource "azurerm_network_interface" "nic" {
 
 ---
 
-### 5. Remote Management
+#### 5. Remote Management
 
 | Feature                         | Linux (`azurerm_linux_virtual_machine`) | Windows (`azurerm_windows_virtual_machine`) |
 |---------------------------------|----------------------------------------|--------------------------------------------|
