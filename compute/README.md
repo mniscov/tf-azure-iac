@@ -52,6 +52,10 @@ module "add_secrets_to_kv" {
   # and the value is a dynamically generated password.
   # These secrets are stored in Azure Key Vault.
   # The key is the VM name (e.g., "linux-vm-1"), and the value is a password format (e.g., "mypassword-1").
+  # If you want to use one password for all VMs you can replace with
+    kv_secrets = {
+    "vms-password-kv-secret" = "<YOUR_SINGLE_PASSWORD>"
+   }
 ```
 
 ### Windows Virtual Machine
