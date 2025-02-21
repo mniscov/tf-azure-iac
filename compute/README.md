@@ -1,4 +1,4 @@
-# Compute Module Documentation
+# Virtual Machine Module Documentation
 
 ## Description
 This module is used to deploy virtual machines (VMs) on Azure using Terraform. It supports both Linux and Windows VMs, providing a flexible way to provision infrastructure in the cloud.
