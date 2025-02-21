@@ -8,17 +8,33 @@ To use this module, add the following code snippet to your Terraform configurati
 
 ### Linux Virtual Machine
 ```hcl
-module "linux_virtual_machine" {
-  source = "git::https://github.com/mniscov/tf-azure-iac-main.git//compute/azurerm_linux_virtual_machine"
+module "virtual_machine" {
+  source = "git::https://github.com/mniscov/tf-azure-iac.git//compute//azurerm_linux_virtual_machine?ref=main"
 
-  # Required Variables
-  vm_name       = "example-vm"
-  resource_group_name = "example-rg"
-  location      = "East US"
-  vm_size       = "Standard_D2s_v3"
-  keyvault_name = "example-kv"
-  user          = "adminuser"
-  os_disk_size_gb = 30
+  vm_count        = "2" #Number of virtual machines to deploy
+  rg_name         = "<your-resource-group>-rg"
+  keyvault_name   = "<your-key-vault>-kv"
+  user			  = "<your-username-for-vms>" #Optional. If you do not set this will use the default admin
+  disable_password_authentication = false #Should stay on false 
+  vnet            = "de-devopsprod-p-ne-nova-vnet"
+  subnet          = "vms-sn"
+  
+  location        = "northeurope"
+  prefix          = "prefix" #VM prefix  to be used for IP configuration
+  vm_name         = "<your-vm-name>"
+  dns_servers     = "<dns-servers>" #Optional. If you do not set this will use the default on-premise dns servers
+
+  publisher       = "Canonical"
+  image_version  = "latest"
+  offer           = "UbuntuServer"
+  sku             = "18.04-LTS"
+  vm_size         = "Standard_B2s"
+  storageat       = "Standard_LRS" #The Type of Storage Account which should back this the Internal OS Disk.
+  tags = {
+    managedBy = "terraform"
+    tag = "value"	
+  }
+  depends_on = [module.add_secrets_to_kv] #If you want to add a secret to an existing keyvault then to be used by vms you should use this module
 }
 ```
 
