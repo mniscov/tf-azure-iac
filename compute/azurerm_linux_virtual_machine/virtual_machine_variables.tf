@@ -1,12 +1,11 @@
-variable "subscription_id" {
-  type        = string
-  description = "Existing VM subscription ID"
-}
-
-variable "tenant_id" {
-  type        = string
-  description = "Tenant ID phoenixonline"
-}
+#variable "subscription_id" {
+#  type        = string
+#  description = "Existing VM subscription ID"
+#}
+#variable "tenant_id" {
+#  type        = string
+#  description = "Tenant ID phoenixonline"
+#}
 
 variable "rg_name" {
   type        = string
