@@ -83,54 +83,54 @@ variable "mypassword" {
 }
 ```
 4. Give values to the variables when you call the module
-Make sure you modify the branch in the source URL
+- Make sure you modify the branch in the source URL
 ```hcl
 module "virtual_machine" {
   source = "git::https://github.com/mniscov/tf-azure-iac.git//compute//azurerm_linux_virtual_machine?ref=<YOUR-NEWLY-CREATED-BRANCH>"
   myusername = <your-username>
   mypassword = <your-password>
 }
+- Don't need to use keyvault_name="<your-key-vault>" and depends_on = [module.add_secrets_to_kv] anymore 
 ```
 
 
 ### Windows Virtual Machine
 ```hcl
 module "windows_virtual_machine" {
-  source = "git::https://github.com/mniscov/tf-azure-iac-main.git//compute/azurerm_windows_virtual_machine"
+  source = "git::https://github.com/mniscov/tf-azure-iac.git//compute//azurerm_windows_virtual_machine?ref=main"
 
-  # Required Variables
-  vm_name       = "example-win-vm"
-  resource_group_name = "example-rg"
-  location      = "East US"
-  vm_size       = "Standard_D2s_v3"
-  keyvault_name = "example-kv"
-  user          = "adminuser"
-  os_disk_size_gb = 50
+  vm_count        = "2" # Number of virtual machines to deploy
+  rg_name         = "<your-resource-group>" # The resource group should already exist
+  keyvault_name   = "<your-key-vault>" # The Key Vault should already exist
+  user            = "<your-username-for-vms>" # Optional. If not set, it will use the default admin
+  vnet            = "de-devopsprod-p-ne-nova-vnet"
+  subnet          = "vms-sn"
+  
+  location        = "northeurope"
+  prefix          = "prefix" # VM prefix used for IP configuration
+  vm_name         = "<your-vm-name>"
+  dns_servers     = "<dns-servers>" # Optional. If not set, it will use the default on-premise DNS servers
+
+  publisher       = "MicrosoftWindowsServer"
+  image_version   = "latest"
+  offer           = "WindowsServer"
+  sku             = "2019-Datacenter"
+  vm_size         = "Standard_D2s_v3"
+  storageat       = "Standard_LRS" # The Type of Storage Account backing the OS Disk.
+
+  enable_automatic_updates = true # Windows Update should be enabled
+
+  # Windows-specific options
+  timezone = "UTC" # Set the time zone for the VM
+
+  tags = {
+    managedBy = "terraform"
+    tag = "value"	
+  }
+
+  depends_on = [module.add_secrets_to_kv] # IMPORTANT! If you want to add a secret to an existing Key Vault for VMs, use the add_secrets_to_kv module
 }
 ```
-
-## Variables
-| Name                 | Type   | Description                          | Default |
-|----------------------|--------|--------------------------------------|---------|
-| `vm_name`           | string | The name of the virtual machine.     | N/A     |
-| `resource_group_name` | string | The name of the resource group.     | N/A     |
-| `location`          | string | The Azure region to deploy into.    | N/A     |
-| `vm_size`           | string | The size of the virtual machine.     | N/A     |
-| `keyvault_name`     | string | The name of the Azure Key Vault.     | N/A     |
-| `user`              | string | The secret name storing the admin username and password. | N/A     |
-| `os_disk_size_gb`   | number | The size of the OS disk in GB.       | N/A     |
-| `subnet`            | string | The name of the subnet.              | N/A     |
-| `vnet`              | string | The name of the virtual network.     | N/A     |
-| `vm_count`          | number | The number of VMs to create.         | 1       |
-| `dns_servers`       | list   | Optional list of DNS servers.        | []      |
-| `tags`              | map    | A map of tags to apply to resources. | {}      |
-
-## Outputs
-| Name                | Description |
-|---------------------|-------------|
-| `vm_id`            | The ID of the created VM. |
-| `vm_public_ip`     | The public IP address of the VM. |
-| `vm_private_ip`    | The private IP address of the VM. |
 
 ## Dependencies
 - This module requires a pre-existing **resource group**.
