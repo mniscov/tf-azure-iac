@@ -144,8 +144,12 @@ data "azurerm_key_vault_secret" "secret1" {
 
 ### Using the Secret in Virtual Machine Deployment
 ```hcl
-admin_username = data.azurerm_key_vault_secret.secret1.name
-admin_password = data.azurerm_key_vault_secret.secret1.value
+resource "azurerm_windows_virtual_machine" "vm" {
+...
+  admin_username = data.azurerm_key_vault_secret.secret1.name
+  admin_password = data.azurerm_key_vault_secret.secret1.value
+...
+}
 ```
 
 ### Don't want to use the module "add_secrets_to_kv"?
