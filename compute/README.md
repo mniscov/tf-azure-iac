@@ -55,7 +55,7 @@ module "add_secrets_to_kv" {
   # The key is the VM name (e.g., "linux-vm-1"), and the value is a password format (e.g., "mypassword-1").
   # If you want to use one password for all VMs you can replace with
   #   kv_secrets = {
-  #  "vms-password-kv-secret" = "<YOUR_SINGLE_PASSWORD>"
+  #  "linux-user" = "<YOUR_SINGLE_PASSWORD>"
   #}
 ```
 
@@ -96,6 +96,25 @@ module "windows_virtual_machine" {
   depends_on = [module.add_secrets_to_kv] # IMPORTANT! If you want to add a secret to an existing Key Vault for VMs, use the add_secrets_to_kv module
   #IF YOU DON'T NEED KEY VAULT INTEGRATION PLEASE CONSULT BELOW "Don't want to use the module "add_secrets_to_kv"?" SECTION
 }
+```
+```hcl
+module "add_secrets_to_kv" {
+  source            = "git::https://github.com/mniscov/tf-azure-iac.git//add-secrets-to-kv?ref=main"
+  keyvault_name     = "<existing-key-vault>" 
+  keyvault_rg_name  = "<existing-key-vault-rg>"
+  
+  kv_secrets = {
+    for i in range(var.vm_count) : "${var.vm_name}-${i + 1}" => "<YOUR_PASS_HERE>-${i + 1}"
+  }
+}
+  # Generates a map of secrets for each VM, where the key is the VM name 
+  # and the value is a dynamically generated password.
+  # These secrets are stored in Azure Key Vault.
+  # The key is the VM name (e.g., "windows-vm-1"), and the value is a password format (e.g., "mypassword-1").
+  # If you want to use one password for all VMs you can replace with
+  #   kv_secrets = {
+  #  "windows-user" = "<YOUR_SINGLE_PASSWORD>"
+  #}
 ```
 
 ## Dependencies
