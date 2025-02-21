@@ -88,10 +88,6 @@ variable "user" {
   default     = "admin"
   description = "Local administrator account"
 }
-variable "storageat" {
-  type        = string
-  description = "Storage Account type"
-}
 variable "tags" {
   type        = map(string)
   description = "Tags to apply to the resources"
