@@ -82,11 +82,11 @@ variable "mypassword" {
   description = "The password of VM"
 }
 ```
-4. Give values to the variables
-
+4. Give values to the variables when you call the module
+Make sure you modify the branch in the source URL
 ```hcl
 module "virtual_machine" {
-  source = "git::https://github.com/mniscov/tf-azure-iac.git//compute//azurerm_linux_virtual_machine?ref=main"
+  source = "git::https://github.com/mniscov/tf-azure-iac.git//compute//azurerm_linux_virtual_machine?ref=<YOUR-NEWLY-CREATED-BRANCH>"
   myusername = <your-username>
   mypassword = <your-password>
 }
