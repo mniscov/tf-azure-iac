@@ -15,7 +15,7 @@ module "virtual_machine" {
   rg_name         = "<your-resource-group>" The resource group should already exist
   keyvault_name   = "<your-key-vault>" #The key vault should already exist
   user			  = "<your-username-for-vms>" #Optional. If you do not set this will use the default admin
-  disable_password_authentication = false #Should stay on false 
+  disable_password_authentication = false #Should stay on false if you want to be able to authenticate using password
   vnet            = "de-devopsprod-p-ne-nova-vnet"
   subnet          = "vms-sn"
   
