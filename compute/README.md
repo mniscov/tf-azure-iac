@@ -218,6 +218,60 @@ resource "azurerm_network_interface" "nic" {
   }
 }
 ```
+## Key Differences Between `azurerm_linux_virtual_machine` and `azurerm_windows_virtual_machine`
+
+### 1. Authentication Differences
+
+| Feature                         | Linux (`azurerm_linux_virtual_machine`)                           | Windows (`azurerm_windows_virtual_machine`) |
+|---------------------------------|----------------------------------------------------------------|--------------------------------------------|
+| **`admin_username` (Required)** |  Yes                                                        |  Yes |
+| **`admin_password` (Optional)** |  Only if `disable_password_authentication = false`         |  Required |
+| **`admin_ssh_key` (Optional)**  |  Required if `admin_password` is not set (SSH authentication) |  Not available (Windows does not support SSH authentication) |
+
+- **Linux:** Can authenticate using **SSH keys or passwords** (if `disable_password_authentication = false`).  
+- **Windows:** **Requires a password (`admin_password`)**, SSH authentication is **not available**.  
+
+---
+
+### 2. OS Customization & User Data
+
+| Feature                         | Linux (`azurerm_linux_virtual_machine`) | Windows (`azurerm_windows_virtual_machine`) |
+|---------------------------------|----------------------------------------|--------------------------------------------|
+| **Custom Data (`custom_data`)** |  Yes (Used for Cloud-init automation) |  Yes, but **must be Base64-encoded** |
+| **Unattended Install (`additional_unattend_content`)** |  No |  Yes (Used for Windows setup automation) |
+| **Time Zone Configuration (`timezone`)** |  No |  Yes (Allows setting Windows time zone) |
+
+---
+
+### 3. OS Patching & Updates
+
+| Feature                         | Linux (`azurerm_linux_virtual_machine`) | Windows (`azurerm_windows_virtual_machine`) |
+|---------------------------------|----------------------------------------|--------------------------------------------|
+| **Patch Mode (`patch_mode`)** | `AutomaticByPlatform`, `ImageDefault`  | `Manual`, `AutomaticByOS`, `AutomaticByPlatform` |
+| **Automatic Updates (`enable_automatic_updates`)** |  No |  Yes (Windows Update) |
+| **Hot Patching (`hotpatching_enabled`)** |  No |  Yes (Apply updates without rebooting) |
+
+---
+
+### 4. Security Features
+
+| Feature                         | Linux (`azurerm_linux_virtual_machine`) | Windows (`azurerm_windows_virtual_machine`) |
+|---------------------------------|----------------------------------------|--------------------------------------------|
+| **Secure Boot (`secure_boot_enabled`)** |  No |  Yes |
+| **Virtual TPM (`vtpm_enabled`)** |  No |  Yes |
+| **Disk Encryption (`disk_encryption_set_id`)** |  Yes |  Yes |
+
+---
+
+### 5. Remote Management
+
+| Feature                         | Linux (`azurerm_linux_virtual_machine`) | Windows (`azurerm_windows_virtual_machine`) |
+|---------------------------------|----------------------------------------|--------------------------------------------|
+| **SSH Access (`admin_ssh_key`)** |  Yes |  No |
+| **WinRM Remote Management (`winrm_listener`)** |  No |  Yes |
+| **RDP Access** |  No |  Yes (via Remote Desktop) |
+
+
 
 ## Notes
 - The module provisions VMs with a default OS image; you can customize it based on your needs.
