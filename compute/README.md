@@ -58,6 +58,41 @@ module "add_secrets_to_kv" {
   #}
 ```
 
+###Don't want to use the module "add_secrets_to_kv"?
+ 1. Create another branch
+ 2. Edit the virtual_machine_main.tf
+    - Remove the data.azurerm_key_vault_secret.secret1.name and data.azurerm_key_vault_secret.secret1.value refference
+```hcl
+resource "azurerm_linux_virtual_machine" "vm" {
+...
+  admin_username        = var.myusername
+  admin_password        = var.mypassword
+...
+}
+```
+3.  Add the variables to virtual_machine_variables.tf
+
+```hcl
+variable "myusername" {
+  type        = string
+  description = "The user of VM"
+}
+variable "mypassword" {
+  type        = string
+  description = "The password of VM"
+}
+```
+4. Give values to the variables
+
+```hcl
+module "virtual_machine" {
+  source = "git::https://github.com/mniscov/tf-azure-iac.git//compute//azurerm_linux_virtual_machine?ref=main"
+  myusername = <your-username>
+  mypassword = <your-password>
+}
+```
+
+
 ### Windows Virtual Machine
 ```hcl
 module "windows_virtual_machine" {
