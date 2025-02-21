@@ -35,6 +35,7 @@ module "virtual_machine" {
     tag = "value"	
   }
   depends_on = [module.add_secrets_to_kv] #IMPORTANT! If you want to add a secret to an existing keyvault to be used by vms you should use add_secrets_to_kv module as well
+  #IF YOU DON'T NEED KEY VAULT INTEGRATION PLEASE CONSULT BELOW "Don't want to use the module "add_secrets_to_kv"?" SECTION
 }
 ```
 
@@ -93,6 +94,7 @@ module "windows_virtual_machine" {
   }
 
   depends_on = [module.add_secrets_to_kv] # IMPORTANT! If you want to add a secret to an existing Key Vault for VMs, use the add_secrets_to_kv module
+  #IF YOU DON'T NEED KEY VAULT INTEGRATION PLEASE CONSULT BELOW "Don't want to use the module "add_secrets_to_kv"?" SECTION
 }
 ```
 
