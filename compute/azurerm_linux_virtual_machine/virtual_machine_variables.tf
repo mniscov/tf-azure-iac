@@ -58,11 +58,6 @@ variable "sku" {
   description = "OS sku"
 }
 
-variable "storageat" {
-  type        = string
-  description = "Storage Account type"
-}
-
 variable "vm_count" {
   type        = number
   description = "Number of virtual machines to deploy"
