@@ -27,10 +27,10 @@ variable "vm_name" {
   description = "virtual machine name"
 }
 
-variable "vnet-rg" {
-  type        = string
-  description = "Existing virutal network resource group"
-}
+#variable "vnet-rg" {
+#  type        = string
+#  description = "Existing virutal network resource group"
+#}
 
 variable "vnet" {
   type        = string
