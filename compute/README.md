@@ -57,6 +57,7 @@ module "add_secrets_to_kv" {
   #   kv_secrets = {
   #  "linux-user" = "<YOUR_SINGLE_PASSWORD>"
   #}
+  #IMPORTANT..Make sure you have proper rights of your service principal in order to add a secret to he Key Vault
 ```
 
 ### Windows Virtual Machine
@@ -115,6 +116,7 @@ module "add_secrets_to_kv" {
   #   kv_secrets = {
   #  "windows-user" = "<YOUR_SINGLE_PASSWORD>"
   #}
+ #IMPORTANT..Make sure you have proper rights of your service principal in order to add a secret to he Key Vault
 ```
 
 ## Dependencies
