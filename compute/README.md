@@ -12,12 +12,12 @@ module "virtual_machine" {
   source = "git::https://github.com/mniscov/tf-azure-iac.git//compute//azurerm_linux_virtual_machine?ref=main"
 
   vm_count        = "2" #Number of virtual machines to deploy
-  rg_name         = "<your-resource-group>" The resource group should already exist
+  rg_name         = "<your-resource-group>" #The resource group should already exist
   keyvault_name   = "<your-key-vault>" #The key vault should already exist
   user			  = "<your-username-for-vms>" #Optional. If you do not set this will use the default admin
   disable_password_authentication = false #Should stay on false if you want to be able to authenticate using password
   vnet            = "de-devopsprod-p-ne-nova-vnet"
-  vnet_rg_name    = "<your-vnet-resource-group>" The resource group should already exist
+  vnet_rg_name    = "<your-vnet-resource-group>" #The resource group should already exist
   subnet          = "vms-sn"
   
   location        = "northeurope"
