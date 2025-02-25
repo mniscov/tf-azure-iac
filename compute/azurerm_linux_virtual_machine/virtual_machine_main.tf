@@ -39,7 +39,7 @@ data "azurerm_key_vault_secret" "secret1" {
 data "azurerm_subnet" "vnet" {
   name                 = var.subnet
   virtual_network_name = var.vnet
-  resource_group_name  = var.rg_name
+  resource_group_name  = var.vnet_rg_name
 }
 
 #########################################
