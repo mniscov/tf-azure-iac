@@ -12,6 +12,11 @@ variable "rg_name" {
   description = "name of your resource group"
 
 }
+variable "vnet_rg_name" {
+  type        = string
+  description = "name of your resource group for subnet"
+
+}
 variable "location" {
   default     = "westeurope"
   description = "location of your resource group"
