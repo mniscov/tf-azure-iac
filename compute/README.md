@@ -17,6 +17,7 @@ module "virtual_machine" {
   user			  = "<your-username-for-vms>" #Optional. If you do not set this will use the default admin
   disable_password_authentication = false #Should stay on false if you want to be able to authenticate using password
   vnet            = "de-devopsprod-p-ne-nova-vnet"
+  vnet_rg_name    = "<your-vnet-resource-group>" The resource group should already exist
   subnet          = "vms-sn"
   
   location        = "northeurope"
