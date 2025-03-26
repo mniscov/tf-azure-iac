@@ -8,19 +8,9 @@ variable "vnet_name" {
   type        = string
 }
 
-variable "address_space" {
-  description = "The address space of the virtual network"
-  type        = list(string)
-}
-
 variable "subnet_name" {
   description = "The name of the existing subnet"
   type        = string
-}
-
-variable "subnet_address_prefix" {
-  description = "The address prefix of the subnet"
-  type        = list(string)
 }
 
 variable "vmss_name" {
@@ -81,6 +71,11 @@ variable "os_disk_storage_account_type" {
 variable "os_disk_caching" {
   description = "The caching setting for the OS disk"
   type        = string
+}
+
+variable "os_disk_size_gb" {
+  description = "The size for the OS disk"
+  type        = number
 }
 
 variable "network_interface_name" {
