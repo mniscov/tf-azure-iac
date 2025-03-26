@@ -87,3 +87,7 @@ variable "ip_configuration_name" {
   description = "The name of the IP configuration for the network interface"
   type        = string
 }
+variable "tags" {
+  type    = map(string)
+  default = {}
+}
