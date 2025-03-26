@@ -60,14 +60,3 @@ variable "disk_size_gb" {
   type        = number
   default     = 200
 }
-
-variable "storage_account_name" {
-  description = "The name of the storage account"
-  type        = string
-}
-
-variable "storage_account_sku" {
-  description = "The SKU of the storage account"
-  type        = string
-  default     = "Standard_LRS"
-}
