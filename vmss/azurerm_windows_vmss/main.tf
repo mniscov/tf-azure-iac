@@ -1,47 +1,48 @@
-resource "azurerm_virtual_machine_scale_set" "example" {
-  name                = var.vmss_name
-  location            = var.location
-  resource_group_name = data.azurerm_resource_group.existing_rg.name
-  sku {
-    name     = var.vm_size
-    capacity = var.instance_count
+data "azurerm_resource_group" "example" {
+  name = var.resource_group_name
+}
+
+data "azurerm_virtual_network" "example" {
+  name                = var.vnet_name
+  resource_group_name = data.azurerm_resource_group.example.name
+}
+
+data "azurerm_subnet" "internal" {
+  name                 = var.subnet_name
+  virtual_network_name = data.azurerm_virtual_network.example.name
+  resource_group_name  = data.azurerm_resource_group.example.name
+}
+
+resource "azurerm_windows_virtual_machine_scale_set" "example" {
+  name                 = var.vmss_name
+  resource_group_name  = data.azurerm_resource_group.example.name
+  location             = data.azurerm_resource_group.example.location
+  sku                  = var.vmss_sku
+  instances            = var.vmss_instances
+  admin_password       = var.admin_password
+  admin_username       = var.admin_username
+  computer_name_prefix = var.computer_name_prefix
+
+  source_image_reference {
+    publisher = var.image_publisher
+    offer     = var.image_offer
+    sku       = var.image_sku
+    version   = var.image_version
   }
 
-  upgrade_policy_mode = "Manual"
-
-  os_profile {
-    computer_name_prefix = "vmss"
-    admin_username       = var.admin_username
-    admin_password       = var.admin_password
+  os_disk {
+    storage_account_type = var.os_disk_storage_account_type
+    caching              = var.os_disk_caching
   }
 
-  os_profile_linux_config {
-    disable_password_authentication = false
-  }
-
-  storage_profile {
-    image_reference {
-      publisher = var.image_publisher
-      offer     = var.image_offer
-      sku       = var.image_sku
-      version   = var.image_version
-    }
-  }
-
-  network_profile {
-    name    = var.network_profile_name
+  network_interface {
+    name    = var.network_interface_name
     primary = true
-    network_interface {
-      name    = var.network_interface_name
-      primary = true
-      ip_configuration {
-        name                                   = var.ip_configuration_name
-        subnet_id                              = data.azurerm_subnet.existing_subnet.id
-        private_ip_address_allocation          = "Dynamic"
-        public_ip_address_configuration {
-          allocation_method = var.allocation_method
-        }
-      }
+
+    ip_configuration {
+      name      = var.ip_configuration_name
+      primary   = true
+      subnet_id = data.azurerm_subnet.internal.id
     }
   }
 }
