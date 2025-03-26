@@ -33,7 +33,8 @@ resource "azurerm_windows_virtual_machine_scale_set" "example" {
   os_disk {
     storage_account_type = var.os_disk_storage_account_type
     caching              = var.os_disk_caching
-  }
+    disk_size_gb         = var.os_disk_size_gb
+   }
 
   network_interface {
     name    = var.network_interface_name
