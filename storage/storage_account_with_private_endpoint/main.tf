@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    azapi = {
+      source = "Azure/azapi"
+      version = "2.2.0"
+    }
+  }
+}
+
 resource "azapi_resource" "storage_account" {
   type      = "Microsoft.Storage/storageAccounts@2023-05-01"
   name      = var.storage_account_name
