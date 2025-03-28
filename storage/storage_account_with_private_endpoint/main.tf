@@ -55,11 +55,11 @@ resource "azapi_update_resource" "blob_service" {
   name      = "default"
   parent_id = azapi_resource.storage_account.id
 
-  body = jsonencode({
+  body = {
     properties = {
       isVersioningEnabled = true
     }
-  })
+  }
 
   depends_on = [azapi_resource.storage_account]
 }
