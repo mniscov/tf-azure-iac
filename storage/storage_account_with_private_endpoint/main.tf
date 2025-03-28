@@ -72,7 +72,7 @@ resource "azapi_resource" "storage_account_pep" {
 
   tags = var.tags
 
-  body = jsonencode({
+  body = {
     properties = {
       subnet = {
         id = var.private_endpoint_subnet_id
@@ -87,7 +87,7 @@ resource "azapi_resource" "storage_account_pep" {
         }
       ]
     }
-  })
+  }
 
   depends_on = [azapi_resource.storage_account]
 }
