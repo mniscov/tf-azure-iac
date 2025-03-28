@@ -15,7 +15,7 @@ resource "azapi_resource" "storage_account" {
 
   tags = var.tags
 
-  body = jsonencode({
+  body = {
     properties = {
       networkAcls = {
         bypass        = "AzureServices"
@@ -47,7 +47,7 @@ resource "azapi_resource" "storage_account" {
       name = var.storage_account_sku
     }
     kind = var.storage_account_kind
-  })
+  }
 }
 
 resource "azapi_update_resource" "blob_service" {
